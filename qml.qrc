@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>glcode.js</file>
+        <file>CameraController.qml</file>
+        <file>Map3D.qml</file>
     </qresource>
 </RCC>

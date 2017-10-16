@@ -1,30 +1,18 @@
-import QtQuick 2.4
-import QtCanvas3D 1.1
-import QtQuick.Window 2.2
-
-import "glcode.js" as GLCode
+import QtQuick 2.7
+import QtQuick.Window 2.3
+import QtQuick.Scene3D 2.0
 
 Window {
-    title: qsTr("map-opengl")
+    title: "test"
     width: 1280
     height: 768
     visible: true
 
-    Canvas3D {
-        id: canvas3d
+    Scene3D {
         anchors.fill: parent
-        focus: true
+        aspects: ["render", "logic", "input"]
 
-        onInitializeGL: {
-            GLCode.initializeGL(canvas3d);
-        }
-
-        onPaintGL: {
-            GLCode.paintGL(canvas3d);
-        }
-
-        onResizeGL: {
-            GLCode.resizeGL(canvas3d);
-        }
+        Map3D { id: map }
     }
+
 }

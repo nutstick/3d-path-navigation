@@ -1,10 +1,20 @@
 TEMPLATE = app
 
-QT += qml quick
+QT += qml quick \
+	concurrent \
+	3dcore 3drender 3dinput \
+	3dquick 3dquickrender 3dquickinput 3dquickextras \
+	network
 
-CONFIG += c++11
+CONFIG += resources_big c++11
 
 SOURCES += main.cpp
+
+OTHER_FILES += \
+	*.qml \
+	glcode.js \
+	shaders/gl3/*.* \
+	shaders/es2/*.* \
 
 RESOURCES += qml.qrc
 
