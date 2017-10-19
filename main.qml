@@ -2,6 +2,8 @@ import QtQuick 2.7
 import QtQuick.Window 2.3
 import QtQuick.Scene3D 2.0
 
+import qt.nutstick.map 1.0
+
 Window {
     title: "test"
     width: 1280
@@ -12,7 +14,7 @@ Window {
         anchors.fill: parent
         aspects: ["render", "logic", "input"]
 
-        Map3D { id: map }
+        Map3D { id: map3d }
     }
 
 }

@@ -4,19 +4,29 @@ QT += qml quick \
 	concurrent \
 	3dcore 3drender 3dinput \
 	3dquick 3dquickrender 3dquickinput 3dquickextras \
-	network
+	network \
+	widgets
 
 CONFIG += resources_big c++11
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    tilemesh.cpp \
+	imagemanager.cpp \
+    networkmanager.cpp \
+    map.cpp \
+    tileentity.cpp \
+    tilematerial.cpp \
+    tileeffect.cpp
 
 OTHER_FILES += \
 	*.qml \
 	glcode.js \
+	sphericalmercator.js \
 	shaders/gl3/*.* \
 	shaders/es2/*.* \
 
-RESOURCES += qml.qrc
+RESOURCES += qml.qrc \
+    shader.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -36,3 +46,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+HEADERS += \
+    tilemesh.h \
+	imagemanager.h \
+    networkmanager.h \
+    map.h \
+    tileentity.h \
+    tilematerial.h \
+    tileeffect.h

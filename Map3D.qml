@@ -5,6 +5,9 @@ import Qt3D.Input 2.0
 import Qt3D.Logic 2.0
 import Qt3D.Extras 2.0
 
+import qt.nutstick.map 1.0
+import qt.nutstick.tile.entity 1.0
+
 Entity {
     id: sceneRoot
 
@@ -15,7 +18,7 @@ Entity {
         aspectRatio: width / height
         nearPlane : 0.1
         farPlane : 1000.0
-        position: Qt.vector3d( 0.0, 0.0, -40.0 )
+        position: Qt.vector3d( 0.0, 40.0, 40.0 )
         upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
         viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
     }
@@ -35,58 +38,67 @@ Entity {
         InputSettings { }
     ]
 
-    PhongMaterial {
+    /* PhongMaterial {
         id: material
     }
 
-    TorusMesh {
-        id: torusMesh
-        radius: 5
-        minorRadius: 1
-        rings: 100
-        slices: 20
+    PlaneMesh {
+        id: planeMesh
+        width: 10.0
+        height: 10.0
     }
 
     Transform {
         id: torusTransform
-        scale3D: Qt.vector3d(1.5, 1, 0.5)
-        rotation: fromAxisAndAngle(Qt.vector3d(1, 0, 0), 45)
-    }
-
-    Entity {
-        id: torusEntity
-        components: [ torusMesh, material, torusTransform ]
-    }
-
-    SphereMesh {
-        id: sphereMesh
-        radius: 3
-    }
-
-    Transform {
-        id: sphereTransform
-        property real userAngle: 0.0
         matrix: {
             var m = Qt.matrix4x4();
-            m.rotate(userAngle, Qt.vector3d(0, 1, 0));
-            m.translate(Qt.vector3d(20, 0, 0));
+            m.translate(Qt.vector3d(10, 0, 0));
             return m;
         }
     }
 
-    QQ2.NumberAnimation {
-        target: sphereTransform
-        property: "userAngle"
-        duration: 10000
-        from: 0
-        to: 360
+    Entity {
+        id: torusEntity
+        components: [ planeMesh, material, torusTransform ]
+    } */
 
-        loops: QQ2.Animation.Infinite
-        running: true
+//    SphereMesh {
+//        id: sphereMesh
+//        radius: 3
+//    }
+
+//    Transform {
+//        id: sphereTransform
+//        property real userAngle: 0.0
+//        matrix: {
+//            var m = Qt.matrix4x4();
+//            m.rotate(userAngle, Qt.vector3d(0, 1, 0));
+//            m.translate(Qt.vector3d(20, 0, 0));
+//            return m;
+//        }
+//    }
+
+//    QQ2.NumberAnimation {
+//        target: sphereTransform
+//        property: "userAngle"
+//        duration: 10000
+//        from: 0
+//        to: 360
+
+//        loops: QQ2.Animation.Infinite
+//        running: true
+//    }
+
+//    Entity {
+//        id: sphereEntity
+//        components: [ sphereMesh, material, sphereTransform ]
+//    }
+
+    Map {
+        id: mm
     }
 
-    Entity {
-        id: sphereEntity
-        components: [ sphereMesh, material, sphereTransform ]
+    TileEntity {
+        id: t
     }
 }
