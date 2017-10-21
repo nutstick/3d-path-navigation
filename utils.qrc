@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>utils/imagemanager.cpp</file>
+        <file>utils/imagemanager.h</file>
+        <file>utils/networkmanager.cpp</file>
+        <file>utils/networkmanager.h</file>
+    </qresource>
+</RCC>

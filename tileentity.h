@@ -4,10 +4,10 @@
 #include <QObject>
 #include <QEntity>
 #include <QTransform>
-#include <QPhongMaterial>
+#include <QMaterial>
 
 #include "tilemesh.h"
-#include "tilematerial.h"
+#include "materials/tilematerial.h"
 
 class TileEntity : public Qt3DCore::QEntity
 {
@@ -28,7 +28,7 @@ private:
 private:
     Qt3DCore::QTransform *m_transform;
     TileMesh *m_mesh;
-    TileMaterial *m_material;
+    Qt3DRender::QMaterial *m_material;
 
     int m_x;
     int m_y;

@@ -10,13 +10,12 @@ QT += qml quick \
 CONFIG += resources_big c++11
 
 SOURCES += main.cpp \
-    tilemesh.cpp \
-	imagemanager.cpp \
-    networkmanager.cpp \
+	tilemesh.cpp \
     map.cpp \
-    tileentity.cpp \
-    tilematerial.cpp \
-    tileeffect.cpp
+	tileentity.cpp \
+    materials/tilematerial.cpp \
+    utils/imagemanager.cpp \
+    utils/networkmanager.cpp
 
 OTHER_FILES += \
 	*.qml \
@@ -26,7 +25,8 @@ OTHER_FILES += \
 	shaders/es2/*.* \
 
 RESOURCES += qml.qrc \
-    shader.qrc
+    shader.qrc \
+    utils.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -48,10 +48,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    tilemesh.h \
-	imagemanager.h \
-    networkmanager.h \
+	tilemesh.h \
     map.h \
-    tileentity.h \
-    tilematerial.h \
-    tileeffect.h
+	tileentity.h \
+    materials/tilematerial.h \
+    utils/imagemanager.h \
+    utils/networkmanager.h
