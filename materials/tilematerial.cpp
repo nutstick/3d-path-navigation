@@ -1,10 +1,11 @@
 #include "tilematerial.h"
+#include "tilematerial_p.h"
 
 #include <QGraphicsApiFilter>
 #include <QTextureWrapMode>
 
-TileMaterial::TileMaterial(Qt3DCore::QNode *parent)
-    : Qt3DRender::QMaterial(parent)
+TileMaterialPrivate::TileMaterialPrivate()
+    : Qt3DRender::QMaterialPrivate()
     , m_effect(new Qt3DRender::QEffect())
     , m_texture(new Qt3DRender::QTexture2D())
     , m_elevation(new Qt3DRender::QTexture2D())
@@ -20,11 +21,14 @@ TileMaterial::TileMaterial(Qt3DCore::QNode *parent)
     , m_GL2ES2Shader(new Qt3DRender::QShaderProgram())
     , m_filterKey(new Qt3DRender::QFilterKey)
 {
+}
 
+void TileMaterialPrivate::init()
+{
     connect(m_textureParameter, &Qt3DRender::QParameter::valueChanged,
-            this, &TileMaterial::handleTextureChanged);
+            this, &TileMaterialPrivate::handleTextureChanged);
     connect(m_elevationParameter, &Qt3DRender::QParameter::valueChanged,
-            this, &TileMaterial::handleElevationMapChanged);
+            this, &TileMaterialPrivate::handleElevationMapChanged);
 
     m_texture->setMagnificationFilter(Qt3DRender::QAbstractTexture::Linear);
     m_texture->setMinificationFilter(Qt3DRender::QAbstractTexture::LinearMipMapLinear);
@@ -80,6 +84,25 @@ TileMaterial::TileMaterial(Qt3DCore::QNode *parent)
     this->setEffect(m_effect);
 }
 
+void TileMaterialPrivate::handleTextureChanged(const QVariant &var)
+{
+    Q_Q(QMorphPhongMaterial);
+    emit q->textureChanged(var.value<Qt3DRender::QTexture2D *>());
+}
+
+void TileMaterialPrivate::handleElevationMapChanged(const QVariant &var)
+{
+    Q_Q(QMorphPhongMaterial);
+    emit q->elevationMapChanged(var.value<Qt3DRender::QTexture2D *>());
+}
+
+TileMaterial::TileMaterial(Qt3DCore::QNode *parent)
+    : QMaterial(*new TileMaterialPrivate, parent)
+{
+    Q_D(TileMaterial);
+    d->init();
+}
+
 TileMaterial::~TileMaterial()
 {
 }
@@ -102,14 +125,4 @@ void TileMaterial::setTexture(Qt3DRender::QTexture2D *texture)
 void TileMaterial::setElevationMap(Qt3DRender::QTexture2D *elevationMap)
 {
     m_elevationParameter->setValue(QVariant::fromValue(elevationMap));
-}
-
-void TileMaterial::handleTextureChanged(const QVariant &var)
-{
-    emit textureChanged(var.value<Qt3DRender::QTexture2D *>());
-}
-
-void TileMaterial::handleElevationMapChanged(const QVariant &var)
-{
-    emit elevationMapChanged(var.value<Qt3DRender::QTexture2D *>());
 }

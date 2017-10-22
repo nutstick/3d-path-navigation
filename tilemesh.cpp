@@ -54,4 +54,4 @@ TileMesh::~TileMesh()
 {
 }
 
-#include "tilemesh.moc"
+// #include "tilemesh.moc"

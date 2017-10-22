@@ -15,7 +15,8 @@ SOURCES += main.cpp \
 	tileentity.cpp \
     materials/tilematerial.cpp \
     utils/imagemanager.cpp \
-    utils/networkmanager.cpp
+    utils/networkmanager.cpp \
+    tilemesh.cpp
 
 OTHER_FILES += \
 	*.qml \
@@ -53,4 +54,5 @@ HEADERS += \
 	tileentity.h \
     materials/tilematerial.h \
     utils/imagemanager.h \
-    utils/networkmanager.h
+    utils/networkmanager.h \
+    materials/tilematerial_p.h
