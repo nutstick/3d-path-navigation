@@ -1,69 +1,30 @@
 #include "tileentity.h"
 
-#include <QPhongMaterial>
-#include "utils/imagemanager.h"
+#include <QTextureMaterial>
 
 TileEntity::TileEntity(QNode *parent)
     : Qt3DCore::QEntity(parent)
     , m_transform(new Qt3DCore::QTransform())
     , m_mesh(new TileMesh())
-    , m_material(new TileMaterial())
+    , m_material(new Qt3DExtras::QTextureMaterial())
+    , m_effect(new Qt3DRender::QEffect)
+    , m_texture(new Qt3DRender::QTexture2D)
+    , m_elevation(new Qt3DRender::QTexture2D)
+    , m_textureParameter(new Qt3DRender::QParameter(QStringLiteral("textureMap"), m_texture))
+    , m_elevationParameter(new Qt3DRender::QParameter(QStringLiteral("elevationMap"), m_elevation))
+    , m_textureImage(new MapTextureImage)
+    , m_elevationImage(new MapTextureImage)
 {
-//    Qt3DRender::QTechnique m_GL3Technique;
-//    Qt3DRender::QTechnique m_GL2Technique;
-//    Qt3DRender::QTechnique m_ES2Technique;
-//    Qt3DRender::QShaderProgram m_GL3Shader;
-//    Qt3DRender::QShaderProgram m_GL2ES2Shader;
-//    Qt3DRender::QFilterKey m_filterKey;
-//    Qt3DRender::QMaterialPrivate
+    m_material->effect()->techniques()[0]->renderPasses()[0]->shaderProgram()->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/gl3/maptile.vert"))));
+    m_material->effect()->techniques()[1]->renderPasses()[0]->shaderProgram()->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/es2/maptile.vert"))));
+    m_material->effect()->techniques()[2]->renderPasses()[0]->shaderProgram()->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/es2/maptile.vert"))));
 
-//    m_GL3Shader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/gl3/maptile.vert"))));
-//    m_GL3Shader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/gl3/maptile.frag"))));
+    m_material->effect()->techniques()[0]->renderPasses()[0]->shaderProgram()->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/gl3/maptile.frag"))));
+    m_material->effect()->techniques()[1]->renderPasses()[0]->shaderProgram()->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/es2/maptile.frag"))));
+    m_material->effect()->techniques()[2]->renderPasses()[0]->shaderProgram()->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/es2/maptile.frag"))));
 
-//    m_GL2ES2Shader->setVertexShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/es2/maptile.vert"))));
-//    m_GL2ES2Shader->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/es2/maptile.frag"))));
-
-//    m_GL3Technique->graphicsApiFilter()->setApi(Qt3DRender::QGraphicsApiFilter::OpenGL);
-//    m_GL3Technique->graphicsApiFilter()->setMajorVersion(3);
-//    m_GL3Technique->graphicsApiFilter()->setMinorVersion(1);
-//    m_GL3Technique->graphicsApiFilter()->setProfile(Qt3DRender::QGraphicsApiFilter::CoreProfile);
-
-//    m_GL2Technique->graphicsApiFilter()->setApi(Qt3DRender::QGraphicsApiFilter::OpenGL);
-//    m_GL2Technique->graphicsApiFilter()->setMajorVersion(2);
-//    m_GL2Technique->graphicsApiFilter()->setMinorVersion(0);
-//    m_GL2Technique->graphicsApiFilter()->setProfile(Qt3DRender::QGraphicsApiFilter::NoProfile);
-
-//    m_ES2Technique->graphicsApiFilter()->setApi(Qt3DRender::QGraphicsApiFilter::OpenGLES);
-//    m_ES2Technique->graphicsApiFilter()->setMajorVersion(2);
-//    m_ES2Technique->graphicsApiFilter()->setMinorVersion(0);
-//    m_ES2Technique->graphicsApiFilter()->setProfile(Qt3DRender::QGraphicsApiFilter::CoreProfile);
-
-//    m_filterKey->setParent(this);
-//    m_filterKey->setName(QStringLiteral("renderingStyle"));
-//    m_filterKey->setValue(QStringLiteral("forward"));
-
-//    m_GL3Technique->addFilterKey(m_filterKey);
-//    m_GL2Technique->addFilterKey(m_filterKey);
-//    m_ES2Technique->addFilterKey(m_filterKey);
-
-//    m_GL3RenderPass->setShaderProgram(m_GL3Shader);
-//    m_GL2RenderPass->setShaderProgram(m_GL2ES2Shader);
-//    m_ES2RenderPass->setShaderProgram(m_GL2ES2Shader);
-
-//    m_GL3Technique->addRenderPass(m_GL3RenderPass);
-//    m_GL2Technique->addRenderPass(m_GL2RenderPass);
-//    m_ES2Technique->addRenderPass(m_ES2RenderPass);
-
-//    m_effect->addTechnique(m_GL3Technique);
-//    m_effect->addTechnique(m_GL2Technique);
-//    m_effect->addTechnique(m_ES2Technique);
-
-//    m_effect->addParameter(m_textureParameter);
-//    m_effect->addParameter(m_elevationParameter);
-
-//    m_effect->setParent(this);
-
-//    m_material->setEffect(m_effect);
+    m_material->addParameter(m_textureParameter);
+    m_material->addParameter(m_elevationParameter);
 
     addComponent(m_transform);
     addComponent(m_mesh);
@@ -99,7 +60,16 @@ void TileEntity::setTileCoordinate(int x, int y, int z)
     m_y = y;
     m_z = z;
 
-    ImageManager::get().image(tileQuery(x, y, z), QSize(256, 256));
+    MapTextureImage* image = new MapTextureImage(mTextureImage, mExtentMapCrs, mTileDebugText);
+    texture->addTextureImage(image);
+    texture->setMinificationFilter(Qt3DRender::QTexture2D::Linear);
+    texture->setMagnificationFilter(Qt3DRender::QTexture2D::Linear);
+
+    QPainter *m_texturePainter = new QPainter;
+    m_texturePainter->drawImage(0, 0, tileTexture);
+
+    m_textureImage->paint(m_texturePainter);
+    m_texture->addTextureImage(m_textureImage);
 }
 
 void TileEntity::setPosition(float x, float y)

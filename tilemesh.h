@@ -2,8 +2,6 @@
 #define TILEMESH_H
 
 #include <QPlaneMesh>
-#include <QNode.h>
-#include <memory>
 
 class TileMesh : public Qt3DExtras::QPlaneMesh
 {

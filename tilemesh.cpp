@@ -1,8 +1,7 @@
 #include "tilemesh.h"
 
-#include <Qt3DRender/qattribute.h>
-#include <Qt3DRender/qbuffer.h>
-#include <Qt3DRender/qgeometry.h>
+#include <QGeometry>
+#include <QAttribute>
 
 //class TessellatedGeometry : public Qt3DRender::QGeometry {
 //    Q_OBJECT

@@ -5,8 +5,8 @@ Map::Map(Qt3DCore::QNode *parent)
     : Qt3DCore::QEntity(parent)
 {
     int x = 0, y = 0, z= 14;
-    for (int i = -3; i < 4; i++) {
-        for (int j = -3; j < 4; j++) {
+    for (int i = 0; i < 1; i++) {
+        for (int j = 0; j < 1; j++) {
             // Load texture
             TileEntity *tile = new TileEntity(this);
             tile->setTileCoordinate(x + i, y + j, z);

@@ -1,6 +1,6 @@
 #version 100
 
-uniform highp sampler2D texture;
+uniform highp sampler2D textureMap;
 
 // varying highp vec2 texCoord;
 

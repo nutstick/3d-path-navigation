@@ -13,10 +13,32 @@ SOURCES += main.cpp \
 	tilemesh.cpp \
     map.cpp \
 	tileentity.cpp \
-    materials/tilematerial.cpp \
+    utils/imagemanager.cpp \
+	utils/networkmanager.cpp \
+    build/qrc_qml.cpp \
     utils/imagemanager.cpp \
     utils/networkmanager.cpp \
-    tilemesh.cpp
+    main.cpp \
+    map.cpp \
+    tileentity.cpp \
+    tilemesh.cpp \
+    utils/imagemanager.cpp \
+    utils/networkmanager.cpp \
+    main.cpp \
+    map.cpp \
+    tileentity.cpp \
+    tilemesh.cpp \
+    maptiles/maptextureimage.cpp \
+    maptiles/maptextureimage.cpp \
+    utils/imagemanager.cpp \
+    utils/networkmanager.cpp \
+    main.cpp \
+    map.cpp \
+    tileentity.cpp \
+    tilemesh.cpp \
+    maptiles/maptexturegenerator.cpp \
+    maptiles/maprendererjob.cpp \
+    terrain.cpp
 
 OTHER_FILES += \
 	*.qml \
@@ -52,7 +74,25 @@ HEADERS += \
 	tilemesh.h \
     map.h \
 	tileentity.h \
-    materials/tilematerial.h \
     utils/imagemanager.h \
     utils/networkmanager.h \
-    materials/tilematerial_p.h
+    utils/imagemanager.h \
+    utils/networkmanager.h \
+    map.h \
+    tileentity.h \
+    tilemesh.h \
+    utils/imagemanager.h \
+    utils/networkmanager.h \
+    map.h \
+    tileentity.h \
+    tilemesh.h \
+    maptiles/maptextureimage.h \
+    maptiles/maptextureimage.h \
+    utils/imagemanager.h \
+    utils/networkmanager.h \
+    map.h \
+    tileentity.h \
+    tilemesh.h \
+    maptiles/maptexturegenerator.h \
+    maptiles/maprendererjob.h \
+    terrain.h

@@ -5,6 +5,8 @@
 
 class TileEntity;
 
+class MapTextureGenerator;
+
 class Map : public Qt3DCore::QEntity
 {
     Q_OBJECT
