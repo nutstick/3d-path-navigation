@@ -1,5 +1,7 @@
 #include "maptextureimage.h"
 
+#include <QTextureImageDataGenerator>
+
 class MapTextureImageDataGenerator : public Qt3DRender::QTextureImageDataGenerator
 {
 public:
@@ -21,9 +23,9 @@ public:
 
     virtual Qt3DRender::QTextureImageDataPtr operator ()() override
     {
-        Qt3DRender::QTextureImageDataPtr dataPtr = Qt3DRender::QTextureGeneratorPtr::create();
+        Qt3DRender::QTextureImageDataPtr dataPtr = Qt3DRender::QTextureImageDataPtr::create();
 
-        dataPtr->setImage(img.isNull() ? placeholderImage() : img);
+        dataPtr->setImage(m_img.isNull() ? placeholderImage() : m_img);
 
         return dataPtr;
     }
@@ -37,11 +39,12 @@ public:
     QT3D_FUNCTOR(MapTextureImageDataGenerator)
 };
 
-MapTextureImage::MapTextureImage(QUrl url, Qt3DCore::QNode *parent)
+MapTextureImage::MapTextureImage(const QUrl url, Qt3DCore::QNode *parent)
     : Qt3DRender::QAbstractTextureImage(parent)
+    , m_jobId(0)
     , m_jobFinished(false)
 {
-    m_mapTextureGenerator = MapTextureGenerator.get();
+    m_mapTextureGenerator = &MapTextureGenerator::get();
     connect(m_mapTextureGenerator, &MapTextureGenerator::finished, this, &MapTextureImage::onTextureReady);
 
     m_jobId = m_mapTextureGenerator->getTexture(url);

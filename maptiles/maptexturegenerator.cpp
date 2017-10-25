@@ -25,35 +25,44 @@ void MapTextureGenerator::destroy()
 
 MapTextureGenerator::MapTextureGenerator(QObject *parent)
     : QObject(parent)
-    , m_nam()
+    , m_nam(new QNetworkAccessManager)
     , m_lastJobId(0)
 {
      connect(m_nam, &QNetworkAccessManager::finished, this, &MapTextureGenerator::onFinished);
 }
 
+MapTextureGenerator::~MapTextureGenerator()
+{
+    Q_FOREACH(const JobData& jd, m_jobs)
+    {
+        jd.reply->abort();
+        jd.reply->deleteLater();
+        m_jobs.remove(jd.reply);
+    }
+}
+
 int MapTextureGenerator::getTexture(QUrl url)
 {
     QNetworkRequest request(url);
-    
     QNetworkReply *reply = m_nam->get(request);
 
     JobData jobData;
     jobData.jobId = ++m_lastJobId;
     jobData.reply = reply;
 
-    jobs.insert(reply, jobData);
+    m_jobs.insert(reply, jobData);
     return jobData.jobId;
 }
 
 void MapTextureGenerator::cancelJob(int jobId)
 {
-    Q_FOREACH(const JobData& jd, jobs)
+    Q_FOREACH(const JobData& jd, m_jobs)
     {
         if (jd.jobId == jobId)
         {
             jd.reply->abort();
             jd.reply->deleteLater();
-            jobs.remove(jd.reply);
+            m_jobs.remove(jd.reply);
             return;
         }
     }
@@ -75,9 +84,6 @@ QImage MapTextureGenerator::getTextureSynchronously(QUrl url)
         if(reply->error() != QNetworkReply::NoError) {
             // Log error.
             qDebug() << "Failed to download '" << reply->url() << "' with error '" << reply->errorString() << "'";
-
-            // Emit that we failed to download the image.
-            emit downloadFailed(reply->url());
         } else {
             // Log success.
             qDebug() << "Downloaded image '" << reply->url() << "'";
@@ -88,13 +94,14 @@ QImage MapTextureGenerator::getTextureSynchronously(QUrl url)
 
             return image;
         }
-
     }
+
+    return QImage();
 }
 
 void MapTextureGenerator::onFinished(QNetworkReply *reply)
 {
-    Q_ASSERT(jobs.contains(reply));
+    Q_ASSERT(m_jobs.contains(reply));
 
     // Read image from reply
     QImageReader render(reply);
@@ -105,5 +112,5 @@ void MapTextureGenerator::onFinished(QNetworkReply *reply)
     reply->deleteLater();
     m_jobs.remove(reply);
 
-    emit textureReady(jd.jobId, image);
+    emit finished(jd.jobId, image);
 }

@@ -12,8 +12,8 @@ TileEntity::TileEntity(QNode *parent)
     , m_elevation(new Qt3DRender::QTexture2D)
     , m_textureParameter(new Qt3DRender::QParameter(QStringLiteral("textureMap"), m_texture))
     , m_elevationParameter(new Qt3DRender::QParameter(QStringLiteral("elevationMap"), m_elevation))
-    , m_textureImage(new MapTextureImage)
-    , m_elevationImage(new MapTextureImage)
+    , m_textureImage(new MapTextureImage(QImage()))
+    , m_elevationImage(new MapTextureImage(QImage()))
 {
     m_material->effect()->techniques()[0]->renderPasses()[0]->shaderProgram()->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/gl3/maptile.vert"))));
     m_material->effect()->techniques()[1]->renderPasses()[0]->shaderProgram()->setFragmentShaderCode(Qt3DRender::QShaderProgram::loadSource(QUrl(QStringLiteral("qrc:/shader/es2/maptile.vert"))));
@@ -47,7 +47,7 @@ const QUrl& TileEntity::baseUrl() const
 
 QUrl TileEntity::tileQuery(int x, int y, int zoom)
 {
-    return QUrl(baseUrl().toString()
+    return QUrl(QString("https://api.mapbox.com/v4/mapbox.satellite/%25zoom/%25x/%25y.png?access_token=%access_token")
         .replace("%25x", QString::number(x))
         .replace("%25y", QString::number(y))
         .replace("%25zoom", QString::number(zoom))
@@ -60,16 +60,10 @@ void TileEntity::setTileCoordinate(int x, int y, int z)
     m_y = y;
     m_z = z;
 
-    MapTextureImage* image = new MapTextureImage(mTextureImage, mExtentMapCrs, mTileDebugText);
-    texture->addTextureImage(image);
-    texture->setMinificationFilter(Qt3DRender::QTexture2D::Linear);
-    texture->setMagnificationFilter(Qt3DRender::QTexture2D::Linear);
-
-    QPainter *m_texturePainter = new QPainter;
-    m_texturePainter->drawImage(0, 0, tileTexture);
-
-    m_textureImage->paint(m_texturePainter);
-    m_texture->addTextureImage(m_textureImage);
+    MapTextureImage* image = new MapTextureImage(tileQuery(x, y, z));
+    m_texture->addTextureImage(image);
+    m_texture->setMinificationFilter(Qt3DRender::QTexture2D::Linear);
+    m_texture->setMagnificationFilter(Qt3DRender::QTexture2D::Linear);
 }
 
 void TileEntity::setPosition(float x, float y)

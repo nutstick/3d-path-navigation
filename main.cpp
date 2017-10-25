@@ -9,6 +9,7 @@
 #include <QFirstPersonCameraController>
 
 #include "map.h"
+#include "cameracontroller.h"
 
 int main(int argc, char *argv[])
 {
@@ -26,9 +27,7 @@ int main(int argc, char *argv[])
     camera->setViewCenter(QVector3D(0, 0, 0));
 
     // For camera controls
-    Qt3DExtras::QFirstPersonCameraController *camController = new Qt3DExtras::QFirstPersonCameraController(scene);
-    camController->setLinearSpeed( 50.0f );
-    camController->setLookSpeed( 180.0f );
+    CameraController *camController = new CameraController(scene);
     camController->setCamera(camera);
 
     view.setRootEntity(scene);

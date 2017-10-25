@@ -11,7 +11,7 @@ class MapTextureImage : public Qt3DRender::QAbstractTextureImage
 {
     Q_OBJECT
 public:
-    MapTextureImage(MapTextureGenerator* mapGen, QUrl url, Qt3DCore::QNode *parent = nullptr);
+    MapTextureImage(const QUrl url, Qt3DCore::QNode *parent = nullptr);
     MapTextureImage(const QImage& image, Qt3DCore::QNode *parent = nullptr);
     ~MapTextureImage();
 
@@ -24,7 +24,7 @@ signals:
     void textureReady();
 
 private:
-    MapTextureGenerator* m_mapTextureGenerator;
+    MapTextureGenerator *m_mapTextureGenerator;
     QImage m_img;
 
     int m_jobId;

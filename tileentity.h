@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QEntity>
+#include <QUrl>
 #include <QTransform>
 #include <QMaterial>
 #include <QEffect>
@@ -36,7 +37,6 @@ private:
     Qt3DCore::QTransform *m_transform;
     TileMesh *m_mesh;
     Qt3DRender::QMaterial *m_material;
-
     Qt3DRender::QEffect *m_effect;
     Qt3DRender::QTexture2D *m_texture;
     Qt3DRender::QTexture2D *m_elevation;

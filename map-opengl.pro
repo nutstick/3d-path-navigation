@@ -10,35 +10,15 @@ QT += qml quick \
 CONFIG += resources_big c++11
 
 SOURCES += main.cpp \
-	tilemesh.cpp \
     map.cpp \
-	tileentity.cpp \
+    tileentity.cpp \
+    tilemesh.cpp \
+	maptiles/maptexturegenerator.cpp \
+	maptiles/maptextureimage.cpp \
     utils/imagemanager.cpp \
 	utils/networkmanager.cpp \
-    build/qrc_qml.cpp \
-    utils/imagemanager.cpp \
-    utils/networkmanager.cpp \
-    main.cpp \
-    map.cpp \
-    tileentity.cpp \
-    tilemesh.cpp \
-    utils/imagemanager.cpp \
-    utils/networkmanager.cpp \
-    main.cpp \
-    map.cpp \
-    tileentity.cpp \
-    tilemesh.cpp \
-    maptiles/maptextureimage.cpp \
-    maptiles/maptextureimage.cpp \
-    utils/imagemanager.cpp \
-    utils/networkmanager.cpp \
-    main.cpp \
-    map.cpp \
-    tileentity.cpp \
-    tilemesh.cpp \
-    maptiles/maptexturegenerator.cpp \
-    maptiles/maprendererjob.cpp \
-    terrain.cpp
+	terrain.cpp \
+    cameracontroller.cpp
 
 OTHER_FILES += \
 	*.qml \
@@ -71,28 +51,12 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-	tilemesh.h \
-    map.h \
+	map.h \
 	tileentity.h \
-    utils/imagemanager.h \
-    utils/networkmanager.h \
-    utils/imagemanager.h \
-    utils/networkmanager.h \
-    map.h \
-    tileentity.h \
-    tilemesh.h \
-    utils/imagemanager.h \
-    utils/networkmanager.h \
-    map.h \
-    tileentity.h \
-    tilemesh.h \
-    maptiles/maptextureimage.h \
-    maptiles/maptextureimage.h \
-    utils/imagemanager.h \
-    utils/networkmanager.h \
-    map.h \
-    tileentity.h \
-    tilemesh.h \
-    maptiles/maptexturegenerator.h \
-    maptiles/maprendererjob.h \
-    terrain.h
+	tilemesh.h \
+	maptiles/maptexturegenerator.h \
+	maptiles/maptextureimage.h \
+	utils/imagemanager.h \
+	utils/networkmanager.h \
+	terrain.h \
+    cameracontroller.h

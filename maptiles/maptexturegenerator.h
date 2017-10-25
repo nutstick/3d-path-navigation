@@ -15,7 +15,7 @@ public:
 
     static void destroy();
 
-private:
+public:
     MapTextureGenerator(QObject *parent = nullptr);
 
     ~MapTextureGenerator();
