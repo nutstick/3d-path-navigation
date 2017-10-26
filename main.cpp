@@ -29,6 +29,9 @@ int main(int argc, char *argv[])
     // For camera controls
     CameraController *camController = new CameraController(scene);
     camController->setCamera(camera);
+    camController->setLinearSpeed(20.0f);
+    camController->setLookSpeed(5.0f);
+    camController->setZoomInLimit(1.0f);
 
     view.setRootEntity(scene);
     view.show();
