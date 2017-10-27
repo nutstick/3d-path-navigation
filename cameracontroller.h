@@ -13,6 +13,7 @@
 #include <QLogicalDevice>
 #include <QObjectPicker>
 #include <QFrameAction>
+#include <QtMath>
 
 class CameraController : public Qt3DCore::QEntity
 {
@@ -21,6 +22,8 @@ class CameraController : public Qt3DCore::QEntity
     Q_PROPERTY(float linearSpeed READ linearSpeed WRITE setLinearSpeed NOTIFY linearSpeedChanged)
     Q_PROPERTY(float lookSpeed READ lookSpeed WRITE setLookSpeed NOTIFY lookSpeedChanged)
     Q_PROPERTY(float zoomInLimit READ zoomInLimit WRITE setZoomInLimit NOTIFY zoomInLimitChanged)
+    Q_PROPERTY(float maxTiltAngle READ maxTiltAngle WRITE setMaxTiltAngle NOTIFY maxTiltAngleChanged)
+    Q_PROPERTY(float minTiltAngle READ minTiltAngle WRITE setMinTiltAngle NOTIFY minTiltAngleChanged)
 
 public:
     explicit CameraController(Qt3DCore::QNode *parent = nullptr);
@@ -30,17 +33,23 @@ public:
     float linearSpeed() const;
     float lookSpeed() const;
     float zoomInLimit() const;
+    float maxTiltAngle() const;
+    float minTiltAngle() const;
 
     void setCamera(Qt3DRender::QCamera *camera);
     void setLinearSpeed(float linearSpeed);
     void setLookSpeed(float lookSpeed);
     void setZoomInLimit(float zoomInLimit);
+    void setMaxTiltAngle(float maxTiltAngle);
+    void setMinTiltAngle(float minTiltAngle);
 
 signals:
     void cameraChanged();
     void linearSpeedChanged();
     void lookSpeedChanged();
     void zoomInLimitChanged();
+    void maxTiltAngleChanged();
+    void minTiltAngleChanged();
 
 private:
     void onTriggered(float dt);
@@ -85,17 +94,19 @@ private:
     float m_linearSpeed;
     float m_lookSpeed;
     float m_zoomInLimit;
-    QVector3D m_cameraUp;
+    float m_maxTiltAngle;
+    float m_minTiltAngle;
 
     struct CameraData {
         float x = 0, y = 0;  // ground point towards which the camera is looking
         float radius = 40;  // distance of camera from the point it is looking at
-        float tilt = 0; // aircraft nose up/down (0 = looking straight down to the plane)
+        float tilt = 90; // aircraft nose up/down (0 = looking straight down to the plane)
         float bearing = 0;   // aircraft nose left/right
+        const QVector3D cameraUp = QVector3D(0, 0, -1);
 
         bool operator==(const CameraData& other) const
         {
-            return x == other.x && y == other.y && dist == other.dist && pitch == other.pitch && yaw == other.yaw;
+            return x == other.x && y == other.y && radius == other.radius && tilt == other.tilt && bearing == other.bearing;
         }
         bool operator!=(const CameraData& other) const
         {
@@ -104,19 +115,17 @@ private:
 
         void setCamera(Qt3DRender::QCamera* camera)
         {
-            // basic scene setup:
-            // - x grows to the right
-            // - z grows to the bottom
-            // - y grows towards camera
-            // so a point on the plane (x',y') is transformed to (x,-z) in our 3D world
+            float x_t = radius * qCos(M_PI * tilt / 180.0f) * qSin(M_PI * bearing / 180.0f) + x;
+            float y_t = radius * qCos(M_PI * tilt / 180.0f) * qCos(M_PI * bearing / 180.0f) + y;
+            float z_t = radius * qSin(M_PI * tilt / 180.0f);
 
-            camera->panAboutViewCenter(bearing, m_cameraUp);
-            camera->tiltAboutViewCenter(tilt);
-
-            camera->setUpVector(QVector3D(0,0,-1));
-            camera->setPosition(QVector3D(x,dist, y));
-            camera->setViewCenter(QVector3D(x,0,y));
-            camera->rotateAboutViewCenter(QQuaternion::fromEulerAngles(pitch, yaw, 0));
+//            qDebug() << x << y;
+//            qDebug() << x_t << y_t << z_t;
+            camera->setUpVector(cameraUp);
+            camera->setPosition(QVector3D(x_t, z_t, y_t));
+//            camera->setPosition(QVector3D(0, 40, 0));
+            camera->setViewCenter(QVector3D(x, 0, y));
+//            camera->rotateAboutViewCenter(QQuaternion::fromEulerAngles(pitch, yaw, 0));
         }
     };
 

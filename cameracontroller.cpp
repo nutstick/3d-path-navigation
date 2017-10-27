@@ -159,6 +159,16 @@ float CameraController::zoomInLimit() const
     return m_zoomInLimit;
 }
 
+float CameraController::maxTiltAngle() const
+{
+    return m_maxTiltAngle;
+}
+
+float CameraController::minTiltAngle() const
+{
+    return m_minTiltAngle;
+}
+
 void CameraController::setCamera(Qt3DRender::QCamera *camera)
 {
     m_camera = camera;
@@ -179,10 +189,25 @@ void CameraController::setZoomInLimit(float zoomInLimit)
     m_zoomInLimit = zoomInLimit;
 }
 
+void CameraController::setMaxTiltAngle(float maxTiltAngle)
+{
+    m_maxTiltAngle = maxTiltAngle;
+}
+
+void CameraController::setMinTiltAngle(float minTiltAngle)
+{
+    m_minTiltAngle = minTiltAngle;
+}
+
 float clampInputs(float input1, float input2)
 {
     float axisValue = input1 + input2;
     return (axisValue < -1) ? -1 : (axisValue > 1) ? 1 : axisValue;
+}
+
+float clampInputs(float input, float min, float max)
+{
+    return (input < min) ? min : (input > max) ? max : input;
 }
 
 void CameraController::onTriggered(float dt)
@@ -195,25 +220,30 @@ void CameraController::onTriggered(float dt)
         if (m_rightMouseButtonAction->isActive()) {
             // TODO:
         } else {
-            // Yaw Pitch
-            qDebug() << "yP";
-            m_camera->translate(QVector3D(clampInputs(m_rxAxis->value(), m_txAxis->value()) * m_linearSpeed, clampInputs(m_ryAxis->value(), m_tyAxis->value()) * m_linearSpeed, 0) * dt);
+            // Panning
+            m_cameraData.x -= clampInputs(m_rxAxis->value(), m_txAxis->value()) * m_linearSpeed * dt;
+            m_cameraData.y += clampInputs(m_ryAxis->value(), m_tyAxis->value()) * m_linearSpeed * dt;
         }
     } else if (m_rightMouseButtonAction->isActive()) {
-        // Panning
-        qDebug() << "P";
-        m_cameraData.bearing = m_cameraData.bearing + (m_rxAxis->value() * m_lookSpeed) * dt;
-        m_cameraData.tilt = m_cameraData.tilt + (m_ryAxis->value() * m_lookSpeed) * dt;
+        // Click and rotate view angle
+        m_cameraData.bearing = clampInputs(m_cameraData.bearing - (m_rxAxis->value() * m_lookSpeed) * dt, 0.0f, 360.0f);
+        m_cameraData.tilt = clampInputs(m_cameraData.tilt - (m_ryAxis->value() * m_lookSpeed) * dt, m_minTiltAngle, m_maxTiltAngle);
     }
 
     if (m_altButtonAction->isActive()) {
-        m_cameraData.bearing = m_cameraData.bearing + (m_rxAxis->value() * m_lookSpeed) * dt;
-        m_cameraData.tilt = m_cameraData.tilt + (m_ryAxis->value() * m_lookSpeed) * dt;
+        // Alt and rotate view angle
+        m_cameraData.bearing = clampInputs(m_cameraData.bearing - (m_rxAxis->value() * m_lookSpeed) * dt, 0.0f, 360.0f);
+        m_cameraData.tilt = clampInputs(m_cameraData.tilt - (m_ryAxis->value() * m_lookSpeed) * dt, m_minTiltAngle, m_maxTiltAngle);
     } else if (m_shiftButtonAction->isActive()) {
         // TODO:
     } else {
-        m_camera->translate(QVector3D(clampInputs(m_leftMouseButtonAction->isActive() ? m_rxAxis->value() : 0, m_txAxis->value()) * m_linearSpeed,
-                                      clampInputs(m_leftMouseButtonAction->isActive() ? m_ryAxis->value() : 0, m_tyAxis->value()) * m_linearSpeed,
-                                      m_tzAxis->value() * m_linearSpeed) * dt);
+        m_cameraData.x -= clampInputs(m_rxAxis->value(), m_txAxis->value()) * m_linearSpeed * dt;
+        m_cameraData.y += clampInputs(m_ryAxis->value(), m_tyAxis->value()) * m_linearSpeed * dt;
+        m_cameraData.radius += m_tzAxis->value() * m_linearSpeed;
+//        m_camera->translate(QVector3D(clampInputs(m_leftMouseButtonAction->isActive() ? m_rxAxis->value() : 0, m_txAxis->value()) * m_linearSpeed,
+//                                      clampInputs(m_leftMouseButtonAction->isActive() ? m_ryAxis->value() : 0, m_tyAxis->value()) * m_linearSpeed,
+//                                      m_tzAxis->value() * m_linearSpeed) * dt);
     }
+
+    m_cameraData.setCamera(m_camera);
 }
