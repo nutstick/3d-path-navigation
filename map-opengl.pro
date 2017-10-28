@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     utils/imagemanager.cpp \
 	utils/networkmanager.cpp \
 	terrain.cpp \
-    cameracontroller.cpp
+    cameracontroller.cpp \
+    utils/sphericalmercator.cpp
 
 OTHER_FILES += \
 	*.qml \
@@ -59,4 +60,5 @@ HEADERS += \
 	utils/imagemanager.h \
 	utils/networkmanager.h \
 	terrain.h \
-    cameracontroller.h
+    cameracontroller.h \
+    utils/sphericalmercator.h

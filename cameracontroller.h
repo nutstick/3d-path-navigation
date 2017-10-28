@@ -118,7 +118,6 @@ private:
             float x_t = radius * qCos(M_PI * tilt / 180.0f) * qSin(M_PI * bearing / 180.0f) + x;
             float y_t = radius * qCos(M_PI * tilt / 180.0f) * qCos(M_PI * bearing / 180.0f) + y;
             float z_t = radius * qSin(M_PI * tilt / 180.0f);
-
 //            qDebug() << x << y;
 //            qDebug() << x_t << y_t << z_t;
             camera->setUpVector(cameraUp);

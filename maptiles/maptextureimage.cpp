@@ -75,6 +75,7 @@ void MapTextureImage::onTextureReady(int jobId, const QImage &image)
     {
         this->m_img = image;
         this->m_jobFinished = true;
+        qDebug() << m_img;
         notifyDataGeneratorChanged();
         emit textureReady();
     }
