@@ -15,6 +15,8 @@
 #include <QFrameAction>
 #include <QtMath>
 
+#include "entities/tile.h"
+
 class CameraController : public Qt3DCore::QEntity
 {
     Q_OBJECT
@@ -28,6 +30,8 @@ class CameraController : public Qt3DCore::QEntity
 public:
     explicit CameraController(Qt3DCore::QNode *parent = nullptr);
     ~CameraController();
+
+    Entity::Tile::TileCoords getTileCoords();
 
     Qt3DRender::QCamera *camera() const;
     float linearSpeed() const;
@@ -102,6 +106,8 @@ private:
         float radius = 40;  // distance of camera from the point it is looking at
         float tilt = 90; // aircraft nose up/down (0 = looking straight down to the plane)
         float bearing = 0;   // aircraft nose left/right
+
+        float width, height;
         const QVector3D cameraUp = QVector3D(0, 0, -1);
 
         bool operator==(const CameraData& other) const

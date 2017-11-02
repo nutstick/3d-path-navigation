@@ -139,6 +139,14 @@ CameraController::~CameraController()
 {
 }
 
+Entity::Tile::TileCoords CameraController::getTileCoords()
+{
+    int z = int(qCeil(qLn(m_cameraData.radius)));
+
+    // TODO: Map pixel to coords
+    return Entity::Tile::TileCoords(0, 0, z);
+}
+
 Qt3DRender::QCamera *CameraController::camera() const
 {
     return m_camera;

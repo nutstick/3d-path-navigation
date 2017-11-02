@@ -10,16 +10,18 @@ QT += qml quick \
 CONFIG += resources_big c++11
 
 SOURCES += main.cpp \
-    map.cpp \
-    tileentity.cpp \
-    tilemesh.cpp \
 	maptiles/maptexturegenerator.cpp \
 	maptiles/maptextureimage.cpp \
     utils/imagemanager.cpp \
 	utils/networkmanager.cpp \
-	terrain.cpp \
     cameracontroller.cpp \
-    utils/sphericalmercator.cpp
+	utils/sphericalmercator.cpp \
+	mainwindow.cpp \
+    entities/map.cpp \
+    entities/terrain.cpp \
+    meshes/tilemesh.cpp \
+    entities/tile.cpp \
+    scene3d.cpp
 
 OTHER_FILES += \
 	*.qml \
@@ -29,8 +31,8 @@ OTHER_FILES += \
 	shaders/es2/*.* \
 
 RESOURCES += qml.qrc \
-    shader.qrc \
-    utils.qrc
+    utils.qrc \
+    shaders.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -52,13 +54,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-	map.h \
-	tileentity.h \
-	tilemesh.h \
 	maptiles/maptexturegenerator.h \
 	maptiles/maptextureimage.h \
 	utils/imagemanager.h \
 	utils/networkmanager.h \
-	terrain.h \
     cameracontroller.h \
-    utils/sphericalmercator.h
+    utils/sphericalmercator.h \
+	mainwindow.h \
+    entities/map.h \
+    entities/terrain.h \
+    meshes/tilemesh.h \
+    entities/tile.h \
+    scene3d.h

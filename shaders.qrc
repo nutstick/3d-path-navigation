@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>shaders/gl3/maptile.frag</file>
+        <file>shaders/es2/maptile.frag</file>
+        <file>shaders/es2/maptile.vert</file>
+        <file>shaders/gl3/maptile.vert</file>
+    </qresource>
+</RCC>

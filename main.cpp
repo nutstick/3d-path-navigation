@@ -1,5 +1,7 @@
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
+#include <QBoxLayout>
+#include <QWidget>
 
 #include <Qt3DCore/QEntity>
 #include <Qt3DCore/QAspectEngine>
@@ -8,35 +10,15 @@
 #include <Qt3DExtras/qt3dwindow.h>
 #include <QFirstPersonCameraController>
 
-#include "map.h"
-#include "cameracontroller.h"
+#include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
 
-    Qt3DExtras::Qt3DWindow view;
+    MainWindow *mainWindow = new MainWindow();
 
-    // Scene Root
-    Map *scene = new Map();
-
-    // Camera
-    Qt3DRender::QCamera *camera = view.camera();
-    camera->lens()->setPerspectiveProjection(45.0f, 16.0f/9.0f, 0.1f, 1000.0f);
-    camera->setPosition(QVector3D(-40.0f, 40.0f, 0));
-    camera->setViewCenter(QVector3D(0, 0, 0));
-
-    // For camera controls
-    CameraController *camController = new CameraController(scene);
-    camController->setCamera(camera);
-    camController->setLinearSpeed(10.0f);
-    camController->setLookSpeed(50.0f);
-    camController->setZoomInLimit(1.0f);
-    camController->setMaxTiltAngle(90);
-    camController->setMinTiltAngle(45);
-
-    view.setRootEntity(scene);
-    view.show();
+    mainWindow->show();
 
     return app.exec();
 }
