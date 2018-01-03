@@ -3,20 +3,20 @@
 
 #include <QMainWindow>
 
-#include "scene3d.h"
+namespace Ui {
+class MainWindow;
+}
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
 public:
-    explicit MainWindow();
-
-signals:
-
-public slots:
+    explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 
 private:
-    Scene3D *m_scene3d;
+    Ui::MainWindow *ui;
 };
 
 #endif // MAINWINDOW_H

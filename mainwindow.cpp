@@ -1,11 +1,14 @@
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 
-MainWindow::MainWindow()
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
-    m_scene3d = new Scene3D();
-    QWidget* container = QWidget::createWindowContainer(m_scene3d, this);
+    ui->setupUi(this);
+}
 
-    qDebug() << container;
-    setCentralWidget(container);
-    // TOOD: Add Button, Compass and etc.
+MainWindow::~MainWindow()
+{
+    delete ui;
 }
